@@ -18,5 +18,21 @@ library(ggplot2)
 library(ggmosaic)
 
 ChickWeight <- ChickWeight
+glimpse(ChickWeight)
+summary(ChickWeight)
+
+```
+
+
+```{r}
+
+weight0 <- ChickWeight %>% group_by(Diet) %>% summarize(nChicks = n(), avgWeight = mean(weight, na.rm = TRUE), sd_weight = sd(weight, na.rm = TRUE))
+print(weight0)
+
+```
+
+
+```{r}
+
 
 ```
