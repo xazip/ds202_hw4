@@ -33,6 +33,24 @@ print(weight0)
 
 
 ```{r}
+tabulate(ChickWeight$Chick) # There are 5 chicks with counts < 12. Remove 
+
+print(length(which(tabulate(ChickWeight$Chick) == 12)))
+
+
+ChickWeight %>% group_by(Chick) %>% summarize(n = n())#Chicks 18, 16, 15, 8, and 44 all have less than 12 measurements
+complete <- ChickWeight %>% filter(!Chick %in% c(18, 16, 15, 8, 44))
+print(head(complete, 3))
+
+
+#complete <- ChickWeight %>% group_by(weight, Time, Chick, Diet) %>% summarize(Chick, n()) %>% mutate(Chick = sum(Chick)) %>% filter(Chick, n() == 12)
+```
+
+
+```{r}
+#complete %>% mutate(weightgain = )
+#For each chick get the weight 
+dat <- ChickWeight %>% group_by(Chick) %>% mutate(weight0 = weight[Time == 0])
 
 
 ```
