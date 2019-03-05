@@ -48,9 +48,10 @@ print(head(complete, 3))
 
 
 ```{r}
-#complete %>% mutate(weightgain = )
-#For each chick get the weight 
-dat <- ChickWeight %>% group_by(Chick) %>% mutate(weight0 = weight[Time == 0])
 
+complete <- ChickWeight %>% group_by(Chick) %>% mutate(weightgain = weight[Time == Time] - weight[Time == 0])
 
+print(head(complete, 3))
 ```
+
+
