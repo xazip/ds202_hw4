@@ -232,6 +232,37 @@ print(weight0)</code></pre>
 ## 2 2         120      123.      71.6
 ## 3 3         120      143.      86.5
 ## 4 4         118      135.      68.8</code></pre>
+<pre class="r"><code>tabulate(ChickWeight$Chick) # There are 5 chicks with counts &lt; 12. Remove </code></pre>
+<pre><code>##  [1]  2  7  8 12 12 12 12 11 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12
+## [24] 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 10 12 12 12 12 12
+## [47] 12 12 12 12</code></pre>
+<pre class="r"><code>print(length(which(tabulate(ChickWeight$Chick) == 12)))</code></pre>
+<pre><code>## [1] 45</code></pre>
+<pre class="r"><code>ChickWeight %&gt;% group_by(Chick) %&gt;% summarize(n = n())#Chicks 18, 16, 15, 8, and 44 all have less than 12 measurements</code></pre>
+<pre><code>## # A tibble: 50 x 2
+##    Chick     n
+##    &lt;ord&gt; &lt;int&gt;
+##  1 18        2
+##  2 16        7
+##  3 15        8
+##  4 13       12
+##  5 9        12
+##  6 20       12
+##  7 10       12
+##  8 8        11
+##  9 17       12
+## 10 19       12
+## # … with 40 more rows</code></pre>
+<pre class="r"><code>complete &lt;- ChickWeight %&gt;% filter(!Chick %in% c(18, 16, 15, 8, 44))
+print(head(complete, 3))</code></pre>
+<pre><code>##   weight Time Chick Diet
+## 1     42    0     1    1
+## 2     51    2     1    1
+## 3     59    4     1    1</code></pre>
+<pre class="r"><code>#complete &lt;- ChickWeight %&gt;% group_by(weight, Time, Chick, Diet) %&gt;% summarize(Chick, n()) %&gt;% mutate(Chick = sum(Chick)) %&gt;% filter(Chick, n() == 12)</code></pre>
+<pre class="r"><code>#complete %&gt;% mutate(weightgain = )
+#For each chick get the weight 
+dat &lt;- ChickWeight %&gt;% group_by(Chick) %&gt;% mutate(weight0 = weight[Time == 0])</code></pre>
 </div>
 
 
