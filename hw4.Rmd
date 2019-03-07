@@ -29,6 +29,8 @@ summary(ChickWeight)
 weight0 <- ChickWeight %>% group_by(Diet) %>% summarize(nChicks = n(), avgWeight = mean(weight, na.rm = TRUE), sd_weight = sd(weight, na.rm = TRUE))
 print(weight0)
 
+
+
 ```
 
 
@@ -39,19 +41,65 @@ print(length(which(tabulate(ChickWeight$Chick) == 12)))
 
 
 ChickWeight %>% group_by(Chick) %>% summarize(n = n())#Chicks 18, 16, 15, 8, and 44 all have less than 12 measurements
-complete <- ChickWeight %>% filter(!Chick %in% c(18, 16, 15, 8, 44))
+#complete <- ChickWeight %>% filter(!Chick %in% c(18, 16, 15, 8, 44))
+#print(head(complete, 3))
+
+
+complete <- ChickWeight %>% group_by(Chick) %>% mutate(n = n()) %>% filter(n() == 12)
 print(head(complete, 3))
 
-
-#complete <- ChickWeight %>% group_by(weight, Time, Chick, Diet) %>% summarize(Chick, n()) %>% mutate(Chick = sum(Chick)) %>% filter(Chick, n() == 12)
 ```
 
 
 ```{r}
 
-complete <- ChickWeight %>% group_by(Chick) %>% mutate(weightgain = weight[Time == Time] - weight[Time == 0])
-
+complete <- complete %>% group_by(Chick) %>% mutate(weightgain = weight[Time == Time] - weight[Time == 0])
+complete
 print(head(complete, 3))
 ```
+
+```{r}
+ggplot(complete, aes(x = Diet ,y = weightgain))+
+  geom_boxplot(aes(fill = Diet)) 
+
+
+complete %>% ggplot(aes(x = reorder(Diet, weightgain), y = weightgain))+
+  geom_boxplot(aes(fill = Diet)) + expand_limits(y = 0)
+
+```
+
+
+
+```{r}
+complete %>% mutate(weightgain = sum(weightgain)) %>% distinct(weightgain) %>% arrange(weightgain)
+
+
+complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = Chick))+
+  geom_boxplot()+
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+```
+
+  
+
+```{r}
+
+Series <- complete %>% group_by(Chick) %>% mutate(weight_log = weight[Time == 0]) %>% filter(weight_log == 39 | weight_log == 43) %>% arrange(weight_log) 
+print(Series)
+
+Series %>% ggplot(aes(x = Time, color = weight_log))+
+  geom_line(aes(y = weight))+
+  facet_wrap(~Chick)
+
+
+
+
+
+```
+
+
+
+
 
 
