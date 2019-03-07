@@ -18,8 +18,8 @@ library(ggplot2)
 library(ggmosaic)
 
 ChickWeight <- ChickWeight
-glimpse(ChickWeight)
-summary(ChickWeight)
+glimpse(ChickWeight)  #Exploring
+summary(ChickWeight)  #Exploring
 
 ```
 
@@ -64,6 +64,11 @@ complete_21 %>% ggplot(aes(x = reorder(Diet, weightgain, FUN = median), y = weig
 
 ```
 
+###### Looking at the boxplot using ggplot we see a couple interesting results.  The highest median value for weight gain was diet number 3 and the smallest median value for weight gain was diet number 1.  The diet with the largest inter-quartile range seems to be diet number 3 and the diet with the smallest inter-quartile range seems to be diet number 4.  Looking at diet number 4, we see the 75% of all recorded weight gains fall below the "low" 300's and looking at diet number 1, we see that 75% of all recorded weight gains fall below the 200's. 
+
+**Additional observations:** It seems that diet number 2 has the largest whiskers and diet number 4 has the lowest amount of observations.  The boxplots are all of uneven size.  
+
+
 # 5. 
 ##### Which chick gained the most weight and which gained the least weight? What diets were they on?
 
@@ -75,36 +80,49 @@ complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = C
   geom_boxplot() + coord_flip()+
   ggtitle("Comparing Recorded Chick's Weight Gain") + xlab("Chick") + ylab("Weight Gain") + theme(axis.text=element_text(size=7))
 
-
-# 35 was on Diet 3
-# 24 was on Diet 2
 ```
+
+###### Chick 35 gained the most weight and was on diet 3.  Chick 24 gained the least weight and was on diet 2,
+
 
 # 6. 
 ##### For the chicks with the least and the most weight at time 0, plot their growth trajectories over time.
 
 ```{r}
 
-Series <- complete %>% group_by(Chick) %>% mutate(weight_log = weight[Time == 0]) %>% filter(weight_log == 39 | weight_log == 43) %>% arrange(weight_log) 
-print(Series)
+Series <- complete %>% group_by(Chick) %>% mutate(weight_log = weight[Time == 0]) %>% filter(weight_log == 39 | weight_log == 43) %>% arrange(weight_log) #Smallest weight at time 0 and Largest weight at time 0
+#print(Series) 
 
 Series %>% ggplot(aes(x = Time, y = weight, color = weight_log))+
   geom_line() + geom_point() + facet_wrap(~Chick, nrow = 2)+
   ggtitle("Growth Trajectories Over Time") + xlab("Time Recorded") + ylab("Weight Gained")
 
-completeAvg <- complete %>% group_by(Chick) %>% mutate(weight_log_avg = mean(weight[Time]))
+completeAvg <- complete %>% group_by(Chick) %>% mutate(weight_log_avg = mean(weight[Time])) # Mean weight for all chicks
+#print(completeAvg)
+
 completeAvg %>% ggplot(aes(x = Time, y = weight, color = Chick))+
   geom_line() + geom_point() + facet_wrap(~Chick) + theme(axis.text=element_text(size=7))+
   ggtitle(" Average Growth Trajectories Over Time for all Chicks") + xlab("Time Recorded") + ylab("Weight Gained")
 
 ```
 
+###### Using ggplot, I have plotted the growth trajectories for chicks with most and least weight at time 0. I have also plot the trajectories for all chicks(calculated as the mean weight for each chick at each time).  I found some interesting results.  When comparing the growth trajectories of (Most and Least at time 0) vs (all chicks and mean weight) it seemed that the growth tracjetories were very similar.  I did notice that the trajectories for all chicks was more linear.  I believe this is due to the larger amount of observations plotted.  
 
+
+# 7. 
+##### What else do you find interesting in the dataset? 
 ```{r}
 
 
+complete %>% ggplot(aes(x = Time, y = weightgain))+
+  geom_point()+ geom_smooth(method = "lm", se = F) + facet_grid(cols = vars(Diet)) +
+  ggtitle("Relationship between Time and Weight Gained for each Diet") + xlab("Time Recorded") + ylab("Weight Gained")
+
 
 ```
+
+######  Using the complete data.frame, I wanted to see the relationship between time and weight gain for each diet.  Looking at the scatter plots from ggplot, we can see that diet number 4 points are tightly clusted together.  I believe for the relationship between time and weight gain, diet number 4 has the highest correlation.  Also, I beleive diet number 1 has the lowest correlation.  There seems to be a moderately strong - strong, positive, linear relationship between time and weight gain for each diet. 
+
 
 
 
