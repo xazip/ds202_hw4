@@ -76,7 +76,7 @@ complete_21 %>% ggplot(aes(x = reorder(Diet, weightgain, FUN = median), y = weig
 complete %>% mutate(weightgain = sum(weightgain)) %>% distinct(weightgain) %>% arrange(weightgain)
 
 
-complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = Chick))+
+complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = Diet))+
   geom_boxplot() + coord_flip()+
   ggtitle("Comparing Recorded Chick's Weight Gain") + xlab("Chick") + ylab("Weight Gain") + theme(axis.text=element_text(size=7))
 
@@ -106,19 +106,16 @@ completeAvg %>% ggplot(aes(x = Time, y = weight, color = Chick))+
 
 ```
 
-###### Using ggplot, I have plotted the growth trajectories for chicks with most and least weight at time 0. I have also plot the trajectories for all chicks(calculated as the mean weight for each chick at each time).  I found some interesting results.  When comparing the growth trajectories of (Most and Least at time 0) vs (all chicks and mean weight) it seemed that the growth tracjetories were very similar.  I did notice that the trajectories for all chicks was more linear.  I believe this is due to the larger amount of observations plotted.  
+###### Using ggplot, I have plotted the growth trajectories for chicks with most and least weight at time 0. I have also plotted the trajectories for all chicks(calculated as the mean weight for each chick at each time).  I found some interesting results.  When comparing the growth trajectories of (Most and Least at time 0) vs (all chicks and mean weight) it seemed that the growth tracjetories were very similar.  I did notice that the trajectories for (all chicks and mean weight) was more linear.  I believe this is due to the larger amount of observations plotted.  
 
 
 # 7. 
 ##### What else do you find interesting in the dataset? 
 ```{r}
 
-
-
 complete %>% ggplot(aes(x = Time, y = weightgain, color = Diet))+
-  geom_point()+ geom_smooth(method = "lm", se = F, color = 'black') + facet_grid(cols = vars(Diet)) +
-  ggtitle("Relationship between Time and Weight Gained for each Diet") + xlab("Time Recorded") + ylab("Weight Gained")
-
+  geom_point()+ geom_smooth(method = "lm", se = FALSE, color = 'black') + facet_grid(cols = vars(Diet)) + 
+  ggtitle("Relationship between Time and Weight Gained for each Diet") + xlab("Time Recorded") + ylab("Weight Gained") # Using se = FALSE was found here: http://www.sthda.com/english/wiki/print.php?id=188
 
 ```
 
