@@ -114,8 +114,9 @@ completeAvg %>% ggplot(aes(x = Time, y = weight, color = Chick))+
 ```{r}
 
 
-complete %>% ggplot(aes(x = Time, y = weightgain))+
-  geom_point()+ geom_smooth(method = "lm", se = F) + facet_grid(cols = vars(Diet)) +
+
+complete %>% ggplot(aes(x = Time, y = weightgain, color = Diet))+
+  geom_point()+ geom_smooth(method = "lm", se = F, color = 'black') + facet_grid(cols = vars(Diet)) +
   ggtitle("Relationship between Time and Weight Gained for each Diet") + xlab("Time Recorded") + ylab("Weight Gained")
 
 
