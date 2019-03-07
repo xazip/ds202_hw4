@@ -29,21 +29,14 @@ summary(ChickWeight)
 weight0 <- ChickWeight %>% group_by(Diet) %>% summarize(nChicks = n(), avgWeight = mean(weight, na.rm = TRUE), sd_weight = sd(weight, na.rm = TRUE))
 print(weight0)
 
-
-
 ```
 
 
 ```{r}
+
 tabulate(ChickWeight$Chick) # There are 5 chicks with counts < 12. Remove 
 
-print(length(which(tabulate(ChickWeight$Chick) == 12)))
-
-
 ChickWeight %>% group_by(Chick) %>% summarize(n = n())#Chicks 18, 16, 15, 8, and 44 all have less than 12 measurements
-#complete <- ChickWeight %>% filter(!Chick %in% c(18, 16, 15, 8, 44))
-#print(head(complete, 3))
-
 
 complete <- ChickWeight %>% group_by(Chick) %>% mutate(n = n()) %>% filter(n() == 12)
 print(head(complete, 3))
@@ -59,12 +52,11 @@ print(head(complete, 3))
 ```
 
 ```{r}
-ggplot(complete, aes(x = Diet ,y = weightgain))+
-  geom_boxplot(aes(fill = Diet)) 
+complete_21 <- complete %>% mutate(weightgain = weight[Time ==21])
 
-
-complete %>% ggplot(aes(x = reorder(Diet, weightgain), y = weightgain))+
-  geom_boxplot(aes(fill = Diet)) + expand_limits(y = 0)
+complete_21 %>% ggplot(aes(x = reorder(Diet, weightgain, FUN = median), y = weightgain))+
+  geom_boxplot(aes(fill = Diet)) + expand_limits(y = 0)+
+   ggtitle("Weight Gain by Diet [Day 21]") + xlab("Diet") + ylab("Weight Gain") 
 
 ```
 
@@ -75,9 +67,8 @@ complete %>% mutate(weightgain = sum(weightgain)) %>% distinct(weightgain) %>% a
 
 
 complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = Chick))+
-  geom_boxplot()+
-  coord_flip()+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  geom_boxplot() + coord_flip()+
+  ggtitle("Comparing Recorded Chick's Weight Gain") + xlab("Chick") + ylab("Weight Gain") + theme(axis.text=element_text(size=7))
 
 ```
 
@@ -88,13 +79,9 @@ complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = C
 Series <- complete %>% group_by(Chick) %>% mutate(weight_log = weight[Time == 0]) %>% filter(weight_log == 39 | weight_log == 43) %>% arrange(weight_log) 
 print(Series)
 
-Series %>% ggplot(aes(x = Time, color = weight_log))+
-  geom_line(aes(y = weight))+
-  facet_wrap(~Chick)
-
-
-
-
+Series %>% ggplot(aes(x = Time, y = weight, color = weight_log))+
+  geom_line() + geom_point() + facet_wrap(~Chick, nrow = 2)+
+  ggtitle("Growth Trajectories Over Time") + xlab("Time Recorded") + ylab("Weight Gained")
 
 ```
 
