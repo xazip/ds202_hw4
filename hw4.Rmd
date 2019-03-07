@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Loading Data 
+## Loading packages and data set
 
 ```{r}
 library(dplyr)
@@ -23,7 +23,8 @@ summary(ChickWeight)
 
 ```
 
-
+# 1.
+##### A frequency breakdown of the number of chicks, their average weight and the standard deviation of the weights in each of the diets at the start of the study.
 ```{r}
 
 weight0 <- ChickWeight %>% group_by(Diet) %>% summarize(nChicks = n(), avgWeight = mean(weight, na.rm = TRUE), sd_weight = sd(weight, na.rm = TRUE))
@@ -31,7 +32,8 @@ print(weight0)
 
 ```
 
-
+# 2. 
+##### Data for all chicks with complete information.
 ```{r}
 
 tabulate(ChickWeight$Chick) # There are 5 chicks with counts < 12. Remove 
@@ -43,14 +45,16 @@ print(head(complete, 3))
 
 ```
 
-
+# 3. 
+##### Introduce a new variable that measures the current weight difference compared to day 0.
 ```{r}
 
 complete <- complete %>% group_by(Chick) %>% mutate(weightgain = weight[Time == Time] - weight[Time == 0])
 complete
 print(head(complete, 3))
 ```
-
+# 4. 
+##### Use {ggplot2} to create side-by-side boxplots of weightgain by Diet for day 21.
 ```{r}
 complete_21 <- complete %>% mutate(weightgain = weight[Time ==21])
 
@@ -60,7 +64,8 @@ complete_21 %>% ggplot(aes(x = reorder(Diet, weightgain, FUN = median), y = weig
 
 ```
 
-
+# 5. 
+##### Which chick gained the most weight and which gained the least weight? What diets were they on?
 
 ```{r}
 complete %>% mutate(weightgain = sum(weightgain)) %>% distinct(weightgain) %>% arrange(weightgain)
@@ -70,9 +75,13 @@ complete %>% ggplot(aes(x = reorder(Chick, weightgain), y = weightgain, fill = C
   geom_boxplot() + coord_flip()+
   ggtitle("Comparing Recorded Chick's Weight Gain") + xlab("Chick") + ylab("Weight Gain") + theme(axis.text=element_text(size=7))
 
+
+# 35 was on Diet 3
+# 24 was on Diet 2
 ```
 
-  
+# 6. 
+##### For the chicks with the least and the most weight at time 0, plot their growth trajectories over time.
 
 ```{r}
 
@@ -83,8 +92,19 @@ Series %>% ggplot(aes(x = Time, y = weight, color = weight_log))+
   geom_line() + geom_point() + facet_wrap(~Chick, nrow = 2)+
   ggtitle("Growth Trajectories Over Time") + xlab("Time Recorded") + ylab("Weight Gained")
 
+completeAvg <- complete %>% group_by(Chick) %>% mutate(weight_log_avg = mean(weight[Time]))
+completeAvg %>% ggplot(aes(x = Time, y = weight, color = Chick))+
+  geom_line() + geom_point() + facet_wrap(~Chick) + theme(axis.text=element_text(size=7))+
+  ggtitle(" Average Growth Trajectories Over Time for all Chicks") + xlab("Time Recorded") + ylab("Weight Gained")
+
 ```
 
+
+```{r}
+
+
+
+```
 
 
 
